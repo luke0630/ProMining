@@ -1,7 +1,16 @@
 name: ProMining
 version: '${project.version}'
-main: com.promining.ProMinin
-api-version: '1.21'
-depend: [Vault]
+main: com.promining.ProMining
+api-version: '1.20'
+depend: [Vault, PlaceholderAPI]
 authors: [Luke0630]
 description: プロ用マイニング（資材サバ専用）
+
+commands:
+  mining:
+    permission: promining
+
+permissions:
+  promining:
+    description: mining
+    default: op
