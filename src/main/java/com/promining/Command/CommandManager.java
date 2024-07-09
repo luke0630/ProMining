@@ -56,6 +56,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(!command.getName().equalsIgnoreCase("mining")) return null;
         if(!(commandSender instanceof Player player)) return null;
-        return List.of("mark");
+        return List.of("mark", "markmode");
     }
 }
