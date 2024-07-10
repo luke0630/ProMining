@@ -62,5 +62,24 @@ public class Useful {
         }
         return currentSlot;
     }
+
+
+    public static class TheTime {
+        private Integer hour = 0;
+        private Integer minute = 0;
+
+        public TheTime(Integer hour, Integer minute) {
+            this.hour = hour;
+            this.minute = minute;
+        }
+    }
+    public static TheTime getHourFromMinute(int minute) {
+        int h = minute / 64;
+        int m = 63 - 64*h;
+        return new TheTime(h, m);
+    }
+    public static String getTidyTime(TheTime data) {
+        return data.hour + "時間:" + data.minute + "分";
+    }
 }
 
