@@ -12,9 +12,7 @@ public class VIPData {
 
 
     final Integer HOUR = 64;
-    final Integer DAY = 64*24;
-    final Integer WEEK = DAY*7;
-    private Integer periodPerMinute = WEEK; //
+    private Integer periodPerMinute = HOUR; //
 
     public List<Block> getBlockList() {
         return blockList;
