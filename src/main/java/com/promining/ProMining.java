@@ -1,6 +1,8 @@
 package com.promining;
 
 import com.promining.Command.CommandManager;
+import com.promining.Data.Data;
+import com.promining.Data.VIPData;
 import com.promining.Listening.GUIListener;
 import com.promining.Listening.Listener;
 import com.promining.Placeholder.ProMiningExpansion;
@@ -33,6 +35,8 @@ public final class ProMining extends JavaPlugin {
 
         new ProMiningExpansion().register(); //
         new SaveLoad().MakeFile();
+
+        Data.vipData.add(new VIPData());
     }
 
 

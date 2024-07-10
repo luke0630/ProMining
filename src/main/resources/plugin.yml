@@ -14,3 +14,6 @@ permissions:
   promining:
     description: mining
     default: op
+  promining.miningotherblock:
+    description: the player that have this permission can break other blocks
+    default: op

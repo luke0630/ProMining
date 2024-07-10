@@ -1,9 +1,6 @@
 package com.promining.Listening;
-import com.promining.Data;
-import io.papermc.paper.event.block.BlockBreakProgressUpdateEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.*;
@@ -15,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
-import static com.promining.Data.*;
+import static com.promining.Data.Data.*;
 import static com.promining.ProMining.Save;
 import static com.promining.Useful.*;
 
@@ -52,49 +49,60 @@ public class Listener implements org.bukkit.event.Listener {
             event.setCancelled(true);
             Save();
         } else {
-            for(var data : markedBlockList) {
-                if(data.getLocation().equals(event.getBlock().getLocation())) {
+            if(isMarkedBlock(event.getBlock().getLocation())) {
+                if(!breakCounterPlayer.containsKey(player.getUniqueId())) {
+                    breakCounterPlayer.put(player.getUniqueId(), 0L);
+                }
+                var breakData = breakCounterPlayer.get(player.getUniqueId());
+                breakCounterPlayer.replace(player.getUniqueId(), breakData+1);
 
-                    if(!breakCounterPlayer.containsKey(player.getUniqueId())) {
-                        breakCounterPlayer.put(player.getUniqueId(), 0L);
-                    }
-                    var breakData = breakCounterPlayer.get(player.getUniqueId());
-                    breakCounterPlayer.replace(player.getUniqueId(), breakData+1);
+                if(breakCounterPlayer.get(player.getUniqueId()) % 10000 == 0) {
+                    Bukkit.broadcastMessage(toColor( "&6&l" + player.getName() + "さんが&c&l破壊数" + breakCounterPlayer.get(player.getUniqueId()) + "回に達成しました！"));
+                }
 
-                    if(breakCounterPlayer.get(player.getUniqueId()) % 10000 == 0) {
-                        Bukkit.broadcastMessage(toColor( "&6&l" + player.getName() + "さんが&c&l破壊数" + breakCounterPlayer.get(player.getUniqueId()) + "回に達成しました！"));
-                    }
+                Save();
 
-                    Save();
+                String actionText = toColor("&f&l破壊数: " + breakCounterPlayer.get(player.getUniqueId()) + "個");
+                player.sendActionBar(actionText);
 
-                    String actionText = toColor("&f&l破壊数: " + breakCounterPlayer.get(player.getUniqueId()) + "個");
-                    player.sendActionBar(actionText);
-
-                    var inv = player.getInventory();
-                    if (inv.firstEmpty() == -1){
-                        for (ItemStack item : player.getInventory().getContents()) {
-                            if(item == null) continue;
-                            if (item.getType() == clickedBlock.getType() && item.getAmount() != 64) {
-                                if(item.getAmount() >= 64) {
-                                } else {
-                                    player.getInventory().addItem(new ItemStack( event.getBlock().getType() ));
-                                    event.setCancelled(true);
-                                    player.sendActionBar(actionText);
-                                    return;
-                                }
+                var inv = player.getInventory();
+                if (inv.firstEmpty() == -1){
+                    for (ItemStack item : player.getInventory().getContents()) {
+                        if(item == null) continue;
+                        if (item.getType() == clickedBlock.getType() && item.getAmount() != 64) {
+                            if(item.getAmount() >= 64) {
+                            } else {
+                                player.getInventory().addItem(new ItemStack( event.getBlock().getType() ));
+                                event.setCancelled(true);
+                                player.sendActionBar(actionText);
+                                return;
                             }
                         }
-                        actionText += toColor(" / &cインベントリがいっぱいなためドロップしました。");
-                        player.getWorld().dropItem(player.getLocation(), new ItemStack(event.getBlock().getType()));
-                    } else {
-                        player.getInventory().addItem( new ItemStack(clickedBlock.getType()));
                     }
-                    event.setCancelled(true);
-                    player.sendActionBar(actionText);
-                    break;
+                    actionText += toColor(" / &cインベントリがいっぱいなためドロップしました。");
+                    player.getWorld().dropItem(player.getLocation(), new ItemStack(event.getBlock().getType()));
+                } else {
+                    player.getInventory().addItem( new ItemStack(clickedBlock.getType()));
                 }
+                event.setCancelled(true);
+                player.sendActionBar(actionText);
+                return;
             }
         }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        var player = event.getPlayer();
+        if(player.hasPermission("promining.miningotherblock")) return;
+        if(event.getClickedBlock() != null) {
+            if(!isMarkedBlock(event.getClickedBlock().getLocation())) {
+                event.setCancelled(true);
+            } else {
+                return;
+            }
+        }
+        event.setCancelled(true);
     }
 
     boolean isMarkedBlock(Location location) {
@@ -147,7 +155,6 @@ public class Listener implements org.bukkit.event.Listener {
         var player = event.getPlayer();
         markingPlayer.remove(player);
     }
-
 
 }
 
