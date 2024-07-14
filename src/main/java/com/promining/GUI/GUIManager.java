@@ -22,8 +22,7 @@ public class GUIManager {
     }
     public enum ListGUI {
         BLOCK_LIST,
-        VIP_LIST,
-        VIP_BLOCK_LIST
+        VIP_LIST
     }
     public static final ListGUIAbstract[] ListGUIs = {
             new BlockList(),
