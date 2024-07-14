@@ -1,11 +1,8 @@
 package com.promining;
 
-import com.promining.Data.Data;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -46,21 +43,7 @@ public class Useful {
         return item;
     }
 
-    public static Inventory getInitInventory(int size, String title) {
-        return Bukkit.createInventory(null, size, toColor(title));
-    }
     public static String getTidyLocation(Location location) {
         return "X: " + location.getBlockX() + " Y: " + location.getBlockY() + " Z: " + location.getBlockZ();
     }
-
-    public static Integer getIndexWithSlot(Player player, int currentSlot) {
-        if(Data.playerOpenGUI.containsKey(player)) {
-            var currentPage = Data.playerOpenPage.get(player);
-            currentPage *= 45;
-            currentPage += currentSlot;
-            return currentPage;
-        }
-        return currentSlot;
-    }
 }
-

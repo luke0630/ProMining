@@ -1,12 +1,14 @@
 package com.promining.Placeholder;
 
-import com.promining.Data.Data;
+import com.promining.Data;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.UUID;
 
 public class ProMiningExpansion extends PlaceholderExpansion {

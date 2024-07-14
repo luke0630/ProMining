@@ -1,5 +1,6 @@
 package com.promining.Command;
 
+import com.promining.Data;
 import com.promining.GUI.GUIManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,9 +10,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.promining.Data.Data.*;
+import static com.promining.Data.*;
 import static com.promining.GUI.GUIManager.openGUI;
 import static com.promining.GUI.GUIManager.openListGUI;
 import static com.promining.Useful.toColor;
@@ -24,7 +26,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         if(!command.getName().equalsIgnoreCase("mining")) return false;
 
         if(strings.length == 0) {
-            openGUI(player, GUIManager.GUI.MAIN_MENU);
+            openListGUI(player, GUIManager.ListGUI.BLOCK_LIST);
         }
         if(strings.length == 1) {
             switch(strings[0]) {
