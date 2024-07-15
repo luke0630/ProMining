@@ -5,8 +5,10 @@ import com.promining.Data.Data;
 import com.promining.Data.VIPData;
 import com.promining.Listening.GUIListener;
 import com.promining.Listening.Listener;
+import com.promining.Listening.SelectorListening;
 import com.promining.Placeholder.ProMiningExpansion;
 import com.promining.System.SaveLoad;
+import com.promining.VillagerScript.VillagerSellerEvents;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -15,8 +17,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.Objects;
-
-import static com.promining.Function.VIPFunction.ShowBar;
 
 public final class ProMining extends JavaPlugin {
     public static ProMining instance;
@@ -32,6 +32,8 @@ public final class ProMining extends JavaPlugin {
         }
         getServer().getPluginManager().registerEvents(new Listener(), this);
         getServer().getPluginManager().registerEvents(new GUIListener(), this);
+        getServer().getPluginManager().registerEvents(new SelectorListening(), this);
+        getServer().getPluginManager().registerEvents(new VillagerSellerEvents(), this);
         Objects.requireNonNull(getServer().getPluginCommand("mining")).setExecutor(new CommandManager());
 
         instance = this;
@@ -41,24 +43,22 @@ public final class ProMining extends JavaPlugin {
 
         Data.vipData.add(new VIPData());
 
-        if(!Bukkit.getOnlinePlayers().isEmpty()) {
-            for(var player : Bukkit.getOnlinePlayers()) {
-                ShowBar(player);
-            }
-        }
     }
 
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        //Save();
+        Data.VillagerData.getEntityData().remove();
     }
 
     public static void Save() {
         new SaveLoad().SaveToConfig();
     }
 
+    public static Economy getEcon() {
+        return econ;
+    }
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;

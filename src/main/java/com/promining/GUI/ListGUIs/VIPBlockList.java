@@ -1,5 +1,6 @@
 package com.promining.GUI.ListGUIs;
 
+import com.promining.Data.Data;
 import com.promining.Data.VIPData;
 import com.promining.GUI.GUIManager;
 import com.promining.GUI.ListGUIAbstract;
@@ -16,6 +17,7 @@ import java.util.List;
 import static com.promining.Data.Data.*;
 import static com.promining.Function.NormalBlockFunction.RemoveBlock;
 import static com.promining.GUI.GUIManager.*;
+import static com.promining.Listening.Listener.isVIPMarkedBlock;
 import static com.promining.ProMining.Save;
 import static com.promining.Useful.*;
 import static com.promining.Useful.toColor;
@@ -81,8 +83,31 @@ public class VIPBlockList extends ListGUIAbstract {
             var data = playerOpenVipData.get(player).clone();
             getClickedBlock(player, (Object o) -> {
                 if(o instanceof Block block) {
+                    for(var markedBlock : markedBlockList) {
+                        if(markedBlock.getLocation().equals(block.getLocation())) {
+                            player.sendMessage(toColor("&cそのブロックはすでに登録済みです。"));
+                            return;
+                        } else if(markedBlock.getType().equals(block.getType())) {
+                            player.sendMessage(toColor("&cそのブロックタイプはすでにノーマルに存在するため追加できませんでした。"));
+                            return;
+                        }
+                    }
+                    var vip = isVIPMarkedBlock(block.getLocation());
+                    if(vip != null) {
+                        player.sendMessage(toColor("&cそのブロックはすでに&6" + vip.getVipName() + "&cのブロックになっています。"));
+                        return;
+                    }
+                    for(var vipData : Data.vipData) {
+                        if(data.equals(vipData)) break;
+                        for(var blockData : vipData.getBlockList()) {
+                            if(block.getType().equals(blockData.getType())) {
+                                player.sendMessage(toColor("&cそのブロックタイプはすでに&6" + vipData.getVipName() +"&cに存在するため追加できませんでした。"));
+                                return;
+                            }
+                        }
+                    }
                     data.getBlockList().add(block);
-                    player.sendMessage("VIPを追加しました");
+                    player.sendMessage("&c&lVIPブロックを追加しました");
                     openListGUI(player, ListGUI.VIP_BLOCK_LIST);
                 }
             });

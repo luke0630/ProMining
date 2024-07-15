@@ -2,27 +2,56 @@ package com.promining.Listening;
 import com.promining.Data.Data;
 import com.promining.Data.VIPData;
 import com.promining.Function.BreakBlockFunction;
+import io.papermc.paper.event.player.AsyncChatEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
 import static com.promining.Data.Data.*;
 import static com.promining.Data.Data.vipData;
-import static com.promining.Function.VIPFunction.ShowBar;
+import static com.promining.Function.Selector.isWand;
+import static com.promining.Function.VIPFunction.IsInVIP;
+import static com.promining.Function.VIPFunction.StartCount;
 import static com.promining.ProMining.Save;
 import static com.promining.Useful.*;
 
 public class Listener implements org.bukkit.event.Listener {
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        var player = event.getPlayer();
+        if(event.getClickedBlock() == null) return;
+        if(event.getClickedBlock().isEmpty()) return;
+        if(event.getClickedBlock().getType() == Material.AIR) return;
+        if(isWand(player.getItemInHand())) {
+            if(!playerSelectorData.containsKey(player)) {
+                playerSelectorData.put(player, new SelectorData(null,null));
+            }
+
+            if(event.getAction().isLeftClick()) {
+                player.sendMessage(toColor("&d開始地点を設定しました。"));
+                playerSelectorData.get(player).setStart(event.getClickedBlock().getLocation());
+            } else if(event.getAction().isRightClick()) {
+                if(event.getHand().equals(EquipmentSlot.HAND)) return;
+                player.sendMessage(toColor("&d終了地点を設定しました。"));
+                playerSelectorData.get(player).setEnd(event.getClickedBlock().getLocation());
+            }
+            event.setCancelled(true);
+        }
+    }
 
     @EventHandler
     public void onCloseInventory(InventoryCloseEvent event) {
@@ -45,6 +74,11 @@ public class Listener implements org.bukkit.event.Listener {
             for(var vip : vipData) {
                 if(!clickedVIPData.equals(vip)) break;
                 if(vip.getCountData().containsKey(player.getUniqueId())) {
+                    if(!IsInVIP(player.getLocation(), vip)) {
+                        player.sendMessage(toColor("&cVIPエリア内にいないためブロックを取れません。"));
+                        event.setCancelled(true);
+                        return;
+                    }
                     BreakBlockFunction.CountBlock(player," &6" + clickedVIPData.getVipName());
                     BreakBlockFunction.giveBlock(player, event);
                     event.setCancelled(true);
@@ -52,7 +86,7 @@ public class Listener implements org.bukkit.event.Listener {
                 }
             }
             event.setCancelled(true);
-            player.sendMessage(toColor("&6" + clickedVIPData.getVipName() + " &cのVIPに加入していないためそれは無効です！"));
+            player.sendMessage(toColor("&6" + clickedVIPData.getVipName() + " &cのVIPに加入する必要があります！"));
             return;
         }
 
@@ -66,6 +100,17 @@ public class Listener implements org.bukkit.event.Listener {
                     break;
                 }
             }
+
+            for(var vip : vipData) {
+                for(var blockData : vip.getBlockList()) {
+                    if(blockData.getType().equals(clickedBlock.getType())) {
+                        player.sendMessage(toColor("&cそのブロックタイプはすでに&6" + vip.getVipName() + "&cで登録されています！"));
+                        event.setCancelled(true);
+                        return;
+                    }
+                }
+            }
+
 
             markedBlockList.add(clickedBlock);
 
@@ -103,19 +148,10 @@ public class Listener implements org.bukkit.event.Listener {
         event.setCancelled(true);
     }
 
-    VIPData isVIPMarkedBlock(Location location) {
+    public static VIPData isVIPMarkedBlock(Location location) {
         for(var data : vipData) {
             for(var locData : data.getBlockList()) {
                 if(locData.getLocation().equals(location)) return data;
-            }
-        }
-        return null;
-    }
-
-    VIPData getVIPFromBlock(Location location) {
-        for(var data : vipData) {
-            for(var block : data.getBlockList()) {
-                if(block.getLocation().equals(location)) return data;
             }
         }
         return null;
@@ -175,7 +211,19 @@ public class Listener implements org.bukkit.event.Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         var player = event.getPlayer();
-        ShowBar(player);
+        for(var vip : vipData) {
+            StartCount(player, vip);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerMessage(AsyncPlayerChatEvent event) {
+        var player = event.getPlayer();
+        if(getMessageMap.containsKey(player)) {
+            getMessageMap.get(player).run(event.getMessage());
+            getMessageMap.remove(player);
+            event.setCancelled(true);
+        }
     }
 
 }

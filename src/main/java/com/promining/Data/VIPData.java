@@ -6,15 +6,36 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 public class VIPData implements Cloneable{
+
+    //****************保存する変数たち******************
     private List<Block> blockList = new ArrayList<>();
     private String vipName = "無題のVIP";
     private Integer needYen = 100;
+    private Data.SelectorData selectorData = null;
+    private  Map<UUID, Data.CountData> countData = new HashMap<>();
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    private String description = "";
+    //*************************************************
 
 
     final Integer HOUR = 60;
     private Integer periodPerMinute = HOUR; //
 
-    private  Map<UUID, Data.CountData> countData = new HashMap<>();
+    public Data.SelectorData getSelectorData() {
+        return selectorData;
+    }
+
+    public void setSelectorData(Data.SelectorData selectorData) {
+        this.selectorData = selectorData;
+    }
 
     public Map<UUID, Data.CountData> getCountData() {
         return countData;

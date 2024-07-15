@@ -1,6 +1,8 @@
 package com.promining.Command;
 
+import com.promining.Data.Data;
 import com.promining.GUI.GUIManager;
+import com.promining.VillagerScript.VillagerClass;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,6 +14,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 import static com.promining.Data.Data.*;
+import static com.promining.Function.Selector.giveWand;
+import static com.promining.Function.VIPFunction.IsInVIP;
 import static com.promining.Function.VIPFunction.JoinVIP;
 import static com.promining.GUI.GUIManager.openGUI;
 import static com.promining.GUI.GUIManager.openListGUI;
@@ -27,10 +31,21 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         if(strings.length == 0) {
             openGUI(player, GUIManager.GUI.MAIN_MENU);
         }
-        if(strings.length == 1) {
+        if(strings.length >= 1) {
             switch(strings[0]) {
+                case "wand" -> {
+                    giveWand(player);
+                }
+                case "spawn" -> {
+                    if(VillagerClass.SpawnVillager(player.getLocation())) {
+                        player.sendMessage("&a&lショップを召喚しました。");
+                    } else {
+                        player.sendMessage("&c&lショップがすでに存在します。");
+                    }
+                }
                 case "test" -> {
-                    JoinVIP(vipData.get(0), player);
+                    openListGUI(player, GUIManager.ListGUI.VIP_JOIN);
+                    //JoinVIP(vipData.get(Integer.parseInt(strings[1])), player);
                     return false;
                 }
                 case "mark" -> {
@@ -39,7 +54,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     return false;
                 }
                 case "markmode" -> {
-
                     if(markingPlayer.containsKey(player)) {
                         markingPlayer.remove(player);
                         player.sendMessage(toColor("&cマークモードから抜けました。"));
@@ -59,6 +73,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(!command.getName().equalsIgnoreCase("mining")) return null;
         if(!(commandSender instanceof Player player)) return null;
-        return List.of("mark", "markmode");
+        return List.of("mark", "markmode", "wand");
     }
 }

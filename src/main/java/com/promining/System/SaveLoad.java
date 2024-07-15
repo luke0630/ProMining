@@ -9,7 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
+import static com.promining.Data.Data.vipData;
 import static com.promining.ProMining.instance;
+import static com.promining.VillagerScript.VillagerClass.SpawnVillager;
 
 public class SaveLoad {
     static Path yamlFile = Path.of(File.separator + "Data.yml");
@@ -58,6 +60,8 @@ public class SaveLoad {
             var path = DATA_PATH + "Counter." + breakCounter.getKey();
             data.set(path, breakCounter.getValue());
         }
+
+        data.set(DATA_PATH + "Villager", Data.VillagerData.getLocation());
         SaveToFile();
     }
 
@@ -79,6 +83,10 @@ public class SaveLoad {
                 var count = instance.configData.getLong(resultPath);
                 Data.breakCounterPlayer.put(UUID.fromString(path), count);
             }
+        }
+
+        if(instance.configData.contains(DATA_PATH + "Villager")) {
+            SpawnVillager(instance.configData.getLocation(DATA_PATH + "Villager"));
         }
     }
 }

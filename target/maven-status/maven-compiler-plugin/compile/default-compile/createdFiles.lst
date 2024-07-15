@@ -1,10 +1,14 @@
+com\promining\Data\VillagerData.class
 com\promining\ProMining.class
 com\promining\Function\VIPFunction.class
 com\promining\System\RunnableSystem.class
 com\promining\GUI\ListGUIAbstract.class
 com\promining\GUI\GUIAbstract.class
+com\promining\Function\Selector.class
 com\promining\GUI\ListGUIs\BlockList.class
 com\promining\Useful.class
+com\promining\VillagerScript\VillagerSellerEvents.class
+com\promining\Data\Data$SelectorData.class
 com\promining\GUI\NormalGUIs\GUI_List.class
 com\promining\Command\CommandManager.class
 com\promining\Useful$TheTime.class
@@ -15,6 +19,7 @@ com\promining\GUI\GUIManager$ListGUI.class
 com\promining\Function\BreakBlockFunction.class
 com\promining\GUI\GUIManager.class
 com\promining\GUI\GUIListData.class
+com\promining\Listening\SelectorListening.class
 com\promining\GUI\GUIManager$GUI.class
 com\promining\Function\ListFunction.class
 com\promining\System\SaveLoad.class
@@ -24,6 +29,8 @@ com\promining\GUI\NormalGUIs\GUI_VIPEditor_ChangePeriod.class
 com\promining\GUI\NormalGUIs\MAIN_MENU.class
 com\promining\GUI\ListGUIs\VIPBlockList.class
 com\promining\Listening\Listener.class
+com\promining\VillagerScript\VillagerClass.class
+com\promining\GUI\ListGUIs\JoinVIPList.class
 com\promining\Placeholder\ProMiningExpansion.class
 com\promining\Data\Data.class
 com\promining\Data\Data$CountData.class

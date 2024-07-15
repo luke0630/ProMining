@@ -1,6 +1,7 @@
 package com.promining.GUI;
 
 import com.promining.GUI.ListGUIs.BlockList;
+import com.promining.GUI.ListGUIs.JoinVIPList;
 import com.promining.GUI.ListGUIs.VIPBlockList;
 import com.promining.GUI.ListGUIs.VIPList;
 import com.promining.GUI.NormalGUIs.GUI_List;
@@ -26,12 +27,14 @@ public class GUIManager {
     public enum ListGUI {
         BLOCK_LIST,
         VIP_LIST,
-        VIP_BLOCK_LIST
+        VIP_BLOCK_LIST,
+        VIP_JOIN,
     }
     public static final ListGUIAbstract[] ListGUIs = {
             new BlockList(),
             new VIPList(),
             new VIPBlockList(),
+            new JoinVIPList(),
     };
     public static final GUIAbstract[] GUIs = {
             new GUI_List(),
