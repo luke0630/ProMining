@@ -80,9 +80,9 @@ public class Useful {
     }
 
     public static TheTime getTheTimeFromSecond(int second) {
-        int h = second / 60 / 60;
-        int m = second / 60 - h*60;
-        int s = second - m*60 - h*60;
+        int h = second / 3600;
+        int m = (second % 3600) / 60;
+        int s = second % 60;
 
         return new TheTime(h, m, s);
     }
@@ -98,6 +98,13 @@ public class Useful {
 
     public static void getClickedBlock(Player player, RunnableSystem.Runnable runnable) {
         clickedMiningBlock.put(player, runnable);
+    }
+
+
+    public static Double isCanPay(Player player, Double needPay) {
+        var current = ProMining.getEcon().getBalance(player);
+        if(current-needPay < 0) return null;
+        return current-needPay;
     }
 
 }

@@ -40,16 +40,15 @@ public final class ProMining extends JavaPlugin {
 
         new ProMiningExpansion().register(); //
         new SaveLoad().MakeFile();
-
-        Data.vipData.add(new VIPData());
-
     }
 
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        Data.VillagerData.getEntityData().remove();
+        if(Data.VillagerData != null && Data.VillagerData.getEntityData() != null) {
+            Data.VillagerData.getEntityData().remove();
+        }
     }
 
     public static void Save() {

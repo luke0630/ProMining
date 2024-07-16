@@ -1,13 +1,7 @@
 package com.promining.GUI;
 
-import com.promining.GUI.ListGUIs.BlockList;
-import com.promining.GUI.ListGUIs.JoinVIPList;
-import com.promining.GUI.ListGUIs.VIPBlockList;
-import com.promining.GUI.ListGUIs.VIPList;
-import com.promining.GUI.NormalGUIs.GUI_List;
-import com.promining.GUI.NormalGUIs.GUI_VIPEditor;
-import com.promining.GUI.NormalGUIs.GUI_VIPEditor_ChangePeriod;
-import com.promining.GUI.NormalGUIs.MAIN_MENU;
+import com.promining.GUI.ListGUIs.*;
+import com.promining.GUI.NormalGUIs.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -23,24 +17,31 @@ public class GUIManager {
         LIST,
         EDITOR_VIP,
         EDITOR_VIP_CHANGE_PERIOD,
+        JOIN_VIP_CONFIRM,
+        EDITOR_VILLAGER,
     }
     public enum ListGUI {
         BLOCK_LIST,
         VIP_LIST,
         VIP_BLOCK_LIST,
+        VIP_BLOCK_LIST_FOR_CUSTOMERS,
         VIP_JOIN,
+        MATERIAL_LIST,
     }
     public static final ListGUIAbstract[] ListGUIs = {
             new BlockList(),
             new VIPList(),
             new VIPBlockList(),
             new JoinVIPList(),
+            new VIPBlockListForCustomers(),
+            new MaterialList(),
     };
     public static final GUIAbstract[] GUIs = {
             new GUI_List(),
             new MAIN_MENU(),
             new GUI_VIPEditor(),
             new GUI_VIPEditor_ChangePeriod(),
+            new GUI_VipConfirm(),
     };
     static GUIListData getListGUI(Player player, ListGUI gui) {
         for(var guiData : ListGUIs) {

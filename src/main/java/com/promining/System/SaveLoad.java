@@ -1,12 +1,16 @@
 package com.promining.System;
 
 import com.promining.Data.Data;
+import com.promining.Data.VIPData;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 import static com.promining.Data.Data.vipData;
@@ -61,12 +65,40 @@ public class SaveLoad {
             data.set(path, breakCounter.getValue());
         }
 
-        data.set(DATA_PATH + "Villager", Data.VillagerData.getLocation());
+        int count = 0;
+        int blockCount = 0;
+        for(var vip : vipData) {
+            String path = DATA_PATH + "VipData." + count + ".";
+            data.set(path + "name", vip.getVipName());
+            data.set(path + "cost", vip.getNeedYen());
+            data.set(path + "description", vip.getDescription());
+
+            for(var countSet : vip.getCountData().entrySet()) {
+                data.set(path + "countData." + countSet.getKey(), countSet.getValue().getVipPeriodTime());
+            }
+
+            data.set(path + "period", vip.getPeriodPerMinute());
+
+            data.set(path + "selectorData.start", vip.getSelectorData().getStart());
+            data.set(path + "selectorData.end", vip.getSelectorData().getEnd());
+
+            for(var block : vip.getBlockList()) {
+                data.set(path + "blockList." + blockCount + ".loc", block.getLocation());
+                data.set(path + "blockList." + blockCount + ".mat", block.getType().toString());
+                blockCount++;
+            }
+            count++;
+        }
+
+        if(Data.VillagerData != null) {
+            data.set(DATA_PATH + "Villager", Data.VillagerData.getLocation());
+        }
         SaveToFile();
     }
 
     public void LoadToConfig() {
         if(!instance.configData.contains(DATA_PATH)) return;
+        var data = instance.configData;
         if(instance.configData.contains(DATA_PATH + "Block")) {
             for(var path : instance.configData.getConfigurationSection(DATA_PATH + "Block").getKeys(false)) {
                 var resultPath = DATA_PATH + "Block." + path + ".";
@@ -84,6 +116,49 @@ public class SaveLoad {
                 Data.breakCounterPlayer.put(UUID.fromString(path), count);
             }
         }
+
+        if(instance.configData.contains(DATA_PATH + "VipData")) {
+            for(var path : instance.configData.getConfigurationSection(DATA_PATH + "VipData").getKeys(false)) {
+                var resultPath = DATA_PATH + "VipData." + path + ".";
+                var loadVipData = new VIPData();
+                loadVipData.setVipName(data.getString(resultPath + "name"));
+                loadVipData.setNeedYen(data.getInt(resultPath + "cost"));
+                loadVipData.setDescription(data.getString(resultPath + "description"));
+                loadVipData.setPeriodPerMinute( data.getInt(resultPath + "period") );
+
+
+                var start = data.getLocation(resultPath + "selectorData.start");
+                var end = data.getLocation(resultPath + "selectorData.end");
+                loadVipData.setSelectorData( new Data.SelectorData(start, end) );
+
+                if(data.contains(resultPath + "countData")) {
+                    var countMap = new HashMap<UUID, Data.CountData>();
+                    for(var uuid : data.getConfigurationSection(resultPath + "countData").getKeys(false)) {
+                        var uuidResultPath = resultPath + "countData." + uuid;
+                        var vipPeriodTime = data.getLong(uuidResultPath);
+                        countMap.put(UUID.fromString(uuid), new Data.CountData(null,  vipPeriodTime  ));
+                    }
+                    loadVipData.setCountData(countMap);
+                }
+
+
+                if(data.contains(resultPath + "blockList")) {
+                    var blockList = new ArrayList<Block>();
+                    for(var blockCount : data.getConfigurationSection(resultPath + "blockList").getKeys(false)) {
+                        var blockPathResult = resultPath + "blockList." + blockCount + ".";
+                        var location = data.getLocation( blockPathResult + "loc" );
+                        var material = Material.valueOf(data.getString( blockPathResult + "mat" ));
+                        var block = location.getWorld().getBlockAt(location);
+                        block.setType(material);
+                        blockList.add( block );
+                    }
+                    loadVipData.setBlockList(blockList);
+                }
+
+                vipData.add(loadVipData);
+            }
+        }
+
 
         if(instance.configData.contains(DATA_PATH + "Villager")) {
             SpawnVillager(instance.configData.getLocation(DATA_PATH + "Villager"));

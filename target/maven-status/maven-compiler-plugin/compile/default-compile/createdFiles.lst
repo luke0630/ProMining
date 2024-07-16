@@ -1,5 +1,6 @@
 com\promining\Data\VillagerData.class
 com\promining\ProMining.class
+com\promining\GUI\NormalGUIs\GUI_VipConfirm.class
 com\promining\Function\VIPFunction.class
 com\promining\System\RunnableSystem.class
 com\promining\GUI\ListGUIAbstract.class
@@ -18,10 +19,12 @@ com\promining\System\RunnableSystem$Runnable.class
 com\promining\GUI\GUIManager$ListGUI.class
 com\promining\Function\BreakBlockFunction.class
 com\promining\GUI\GUIManager.class
+com\promining\GUI\ListGUIs\MaterialList.class
 com\promining\GUI\GUIListData.class
 com\promining\Listening\SelectorListening.class
 com\promining\GUI\GUIManager$GUI.class
 com\promining\Function\ListFunction.class
+com\promining\GUI\ListGUIs\VIPBlockListForCustomers.class
 com\promining\System\SaveLoad.class
 com\promining\Data\VIPData.class
 com\promining\Placeholder\ProMiningExpansion$RankSet.class

@@ -17,6 +17,7 @@ import java.util.List;
 import static com.promining.Data.Data.*;
 import static com.promining.Function.NormalBlockFunction.RemoveBlock;
 import static com.promining.Function.VIPFunction.JoinVIP;
+import static com.promining.GUI.GUIManager.openListGUI;
 import static com.promining.GUI.GUIManager.updateListGUI;
 import static com.promining.ProMining.Save;
 import static com.promining.Useful.*;
@@ -37,13 +38,19 @@ public class JoinVIPList extends ListGUIAbstract {
         var itemList = new ArrayList<ItemStack>();
         for(var vip : vipData) {
             var item = getItem(Material.GOLD_BLOCK, "&6" + vip.getVipName());
+            var isJoining = vip.getCountData().containsKey(player.getUniqueId());
+            String isJoiningString = "&8現在、加入していません。";
+            if(isJoining) {
+                isJoiningString = "&a&l加入しています。";
+            }
             setLore(item, List.of(
+                    isJoiningString,
                     "&f&l-------------------------------------",
                     "&cVIP期限: " + Useful.getTidyTime( Useful.getHourFromMinute(vip.getPeriodPerMinute()) ),
                     "&a加入金: " + vip.getNeedYen() + "円",
                     "&c説明: " + vip.getDescription(),
                     "&f&l-------------------------------------",
-                    "&cクリックして加入する",
+                    "&cクリックして掘られるブロック一覧&加入画面へ移動",
                     "&f&l-------------------------------------",
                     "&6VIP期限とは: このVIPでいられる期間のことで、",
                     "&6&l期間が過ぎると&c&lVIPのブロックは手に入れられなくなります。",
@@ -66,8 +73,8 @@ public class JoinVIPList extends ListGUIAbstract {
             if(e instanceof InventoryClickEvent event) {
                 Player player = (Player) event.getWhoClicked();
                 var index = getIndexWithSlot(player, event.getSlot());
-                JoinVIP(vipData.get(index), player);
-                player.closeInventory();
+                playerOpenVipData.put(player, vipData.get(index));
+                openListGUI(player, GUIManager.ListGUI.VIP_BLOCK_LIST_FOR_CUSTOMERS);
             }
         };
     }

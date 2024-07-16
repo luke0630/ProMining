@@ -2,6 +2,7 @@ package com.promining.GUI.ListGUIs;
 
 import com.promining.Data.Data;
 import com.promining.Data.VIPData;
+import com.promining.Function.VIPFunction;
 import com.promining.GUI.GUIManager;
 import com.promining.GUI.ListGUIAbstract;
 import com.promining.System.RunnableSystem;
@@ -81,6 +82,8 @@ public class VIPBlockList extends ListGUIAbstract {
     protected Runnable centerCallBack() {
         return () -> {
             var data = playerOpenVipData.get(player).clone();
+            vipMarkingPlayer.remove(player);
+            clickedMiningBlock.remove(player);
             getClickedBlock(player, (Object o) -> {
                 if(o instanceof Block block) {
                     for(var markedBlock : markedBlockList) {

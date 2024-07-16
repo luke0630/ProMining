@@ -55,6 +55,7 @@ public class Data {
     public static List<VIPData> vipData = new ArrayList<>();
     public static Map<UUID, Long> breakCounterPlayer = new TreeMap<>(Collections.reverseOrder());;
     public static Map<Player, Boolean> markingPlayer = new HashMap<>();
+    public static List<Player> vipMarkingPlayer = new ArrayList<>();
     public static List<Block> markedBlockList = new ArrayList<>();
 
 

@@ -6,16 +6,21 @@ import com.promining.GUI.GUIManager;
 import com.promining.ProMining;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import static com.promining.Data.Data.*;
 import static com.promining.GUI.GUIManager.openGUI;
+import static com.promining.GUI.GUIManager.openListGUI;
+import static com.promining.Listening.Listener.isVIPMarkedBlock;
+import static com.promining.ProMining.Save;
 import static com.promining.ProMining.getEcon;
 import static com.promining.Useful.*;
 
 public class VIPFunction {
     public static void RemoveVIP(VIPData vipData) {
         Data.vipData.remove(vipData);
+        Save();
     }
     public static VIPData AddVIP() {
         var newData = new VIPData();
@@ -30,6 +35,7 @@ public class VIPFunction {
         newData.setVipName(newName);
         newData.setDescription("説明なし");
         vipData.add(newData);
+        Save();
         return newData;
     }
     public static void SetVIPDescription(Player player, VIPData data) {
@@ -40,6 +46,7 @@ public class VIPFunction {
                 data.setDescription(message);
                 Bukkit.getScheduler().runTask(ProMining.instance, () -> {
                     openGUI(player, GUIManager.GUI.EDITOR_VIP);
+                    Save();
                 });
             }
         });
@@ -66,6 +73,7 @@ public class VIPFunction {
         if(!vip.getCountData().containsKey(player.getUniqueId())) return;
         var countData = vip.getCountData().get(player.getUniqueId());
         String time = getTidyTime( getTheTimeFromSecond(countData.getVipPeriodTime().intValue()) );
+
         player.sendActionBar("【" + vip.getVipName() + ": " + time + "】");
     }
 
@@ -83,7 +91,7 @@ public class VIPFunction {
                 Bukkit.getScheduler().runTaskTimerAsynchronously(ProMining.instance, getCounter(player, vip), 0, 20),
                 vip.getPeriodPerMinute().longValue()*60
         ));
-
+        Save();
         player.sendMessage("-------------------------------------------");
         player.sendMessage(toColor("&a" + vip.getNeedYen() + "円を支払い、"));
         player.sendMessage(toColor("&c" + vip.getVipName() + " のVIPになりました！"));
@@ -113,6 +121,7 @@ public class VIPFunction {
             }
             data.get(player.getUniqueId()).setVipPeriodTime( data.get(player.getUniqueId()).getVipPeriodTime()-1 );
             UpdateShowBar(player, vip);
+            Bukkit.getScheduler().runTask(ProMining.instance, ProMining::Save);
         };
     }
 
@@ -155,6 +164,61 @@ public class VIPFunction {
             return true;
         }
         return false;
+    }
+
+
+    public static VIPData getVipDataFromName(String name) {
+        for(var vip : vipData) {
+            if(vip.getVipName().equalsIgnoreCase(name)) {
+                return vip;
+            }
+        }
+        return null;
+    }
+
+    public static void addNewBlock(Player player, VIPData data, boolean isMarkMode) {
+        getClickedBlock(player, (Object o) -> {
+            if(o instanceof Block block) {
+                for(var markedBlock : markedBlockList) {
+                    if(markedBlock.getLocation().equals(block.getLocation())) {
+                        player.sendMessage(toColor("&cそのブロックはすでに登録済みです。"));
+                        addNewBlock(player, data, true);
+                        return;
+                    } else if(markedBlock.getType().equals(block.getType())) {
+                        player.sendMessage(toColor("&cそのブロックタイプはすでにノーマルに存在するため追加できませんでした。"));
+                        addNewBlock(player, data, true);
+                        return;
+                    }
+                }
+                var vip = isVIPMarkedBlock(block.getLocation());
+                if(vip != null) {
+                    player.sendMessage(toColor("&cそのブロックはすでに&6" + vip.getVipName() + "&cのブロックになっています。"));
+                    addNewBlock(player, data, true);
+                    return;
+                }
+                for(var vipData : Data.vipData) {
+                    for(var blockData : vipData.getBlockList()) {
+                        if(block.getType().equals(blockData.getType())) {
+                            player.sendMessage(toColor("&cそのブロックタイプはすでに&6" + vipData.getVipName() +"&cに存在するため追加できませんでした。"));
+                            addNewBlock(player, data, true);
+                            return;
+                        }
+                    }
+                }
+                data.getBlockList().add(block);
+                player.sendMessage("&c&lVIPブロックを追加しました");
+                if(!isMarkMode) {
+                    openListGUI(player, GUIManager.ListGUI.VIP_BLOCK_LIST);
+                } else {
+                    addNewBlock(player, data, true);
+                }
+            }
+        });
+        if(!vipMarkingPlayer.contains(player)) {
+            player.sendMessage(toColor("&cVIPマイニング対象にしたいブロックをクリックしてください。"));
+            player.closeInventory();
+            vipMarkingPlayer.add(player);
+        }
     }
 
 }

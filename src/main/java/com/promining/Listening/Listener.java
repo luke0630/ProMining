@@ -64,8 +64,9 @@ public class Listener implements org.bukkit.event.Listener {
 
         if(clickedMiningBlock.containsKey(player)) {
             if (clickedBlock.isEmpty()) return;
-            clickedMiningBlock.get(player).run(clickedBlock);
+            var callBack = clickedMiningBlock.get(player);
             clickedMiningBlock.remove(player);
+            callBack.run(clickedBlock);
             event.setCancelled(true);
             return;
         }

@@ -1,5 +1,6 @@
 package com.promining.Data;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -9,10 +10,21 @@ public class VIPData implements Cloneable{
 
     //****************保存する変数たち******************
     private List<Block> blockList = new ArrayList<>();
+
+    public Material getVipIcon() {
+        return vipIcon;
+    }
+
+    public void setVipIcon(Material vipIcon) {
+        this.vipIcon = vipIcon;
+    }
+
+    private Material vipIcon = Material.GOLD_BLOCK;
     private String vipName = "無題のVIP";
     private Integer needYen = 100;
     private Data.SelectorData selectorData = null;
     private  Map<UUID, Data.CountData> countData = new HashMap<>();
+
 
     public String getDescription() {
         return description;
