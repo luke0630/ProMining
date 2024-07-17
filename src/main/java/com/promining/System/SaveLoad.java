@@ -164,6 +164,13 @@ public class SaveLoad {
                 var end = data.getLocation(resultPath + "selectorData.end");
                 loadVipData.setSelectorData( new Data.SelectorData(start, end) );
 
+                if(data.contains(resultPath + "villager")) {
+                    for(var vipVillagerPath : data.getConfigurationSection(resultPath + "villager").getKeys(false)) {
+                        var resultVillagerPath = resultPath + "villager." + vipVillagerPath + ".";
+                        //TODO: nameとloc
+                    }
+                }
+
                 if(data.contains(resultPath + "countData")) {
                     var countMap = new HashMap<UUID, Data.CountData>();
                     for(var uuid : data.getConfigurationSection(resultPath + "countData").getKeys(false)) {
