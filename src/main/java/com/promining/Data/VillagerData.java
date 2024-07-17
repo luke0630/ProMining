@@ -7,15 +7,32 @@ import org.bukkit.entity.Entity;
 import java.util.UUID;
 
 public class VillagerData {
+    private Entity entityData = null;
+    private Location location = null;
+    private UUID villagerUUID = null;
+    private String name = "";
+
+    public VIPData getVip() {
+        return vip;
+    }
+
+    public void setVip(VIPData vip) {
+        this.vip = vip;
+    }
+
+    private VIPData vip = null;
+
+
     public Entity getEntityData() {
         return entityData;
     }
 
-    public VillagerData(Location location, UUID villagerUUID, String name, Entity entityData) {
+    public VillagerData(Location location, UUID villagerUUID, String name, Entity entityData, VIPData vip) {
         this.location = location;
         this.villagerUUID = villagerUUID;
         this.name = name;
         this.entityData = entityData;
+        this.vip = vip;
     }
 
     public UUID getVillagerUUID() {
@@ -26,11 +43,6 @@ public class VillagerData {
         this.villagerUUID = villagerUUID;
     }
 
-    private Entity entityData = null;
-
-    private Location location = null;
-
-    private UUID villagerUUID = null;
 
     public Location getLocation() {
         return location;
@@ -47,6 +59,4 @@ public class VillagerData {
     public void setName(String name) {
         this.name = name;
     }
-
-    private String name = "";
 }

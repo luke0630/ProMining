@@ -41,8 +41,11 @@ public class VIPBlockListForCustomers extends ListGUIAbstract {
 
     @Override
     protected ItemStack centerInteractButton() {
-        var item = getItem(Material.REDSTONE, "&c加入する");
         var vip = playerOpenVipData.get(player);
+        if(vip.getCountData().containsKey(player.getUniqueId())) {
+            return getItem(Material.BARRIER, "&c&lすでに加入済みです。");
+        }
+        var item = getItem(Material.REDSTONE, "&c加入する");
 
         String isCanMessage = "";
         Double nokori = isCanPay(player, vip.getNeedYen().doubleValue());
@@ -66,6 +69,8 @@ public class VIPBlockListForCustomers extends ListGUIAbstract {
     @Override
     protected Runnable centerCallBack() {
         return () -> {
+            var vip = playerOpenVipData.get(player);
+            if(vip.getCountData().containsKey(player.getUniqueId())) return;
             openGUI(player, GUI.JOIN_VIP_CONFIRM);
         };
     }

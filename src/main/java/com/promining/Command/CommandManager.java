@@ -2,6 +2,7 @@ package com.promining.Command;
 
 import com.google.common.base.Strings;
 import com.promining.Data.Data;
+import com.promining.Function.VIPFunction;
 import com.promining.GUI.GUIManager;
 import com.promining.VillagerScript.VillagerClass;
 import org.bukkit.command.Command;
@@ -40,7 +41,21 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     giveWand(player);
                 }
                 case "spawn" -> {
-                    if(VillagerClass.SpawnVillager(player.getLocation())) {
+                    if(strings.length >= 2) {
+                        var vip = VIPFunction.getVipDataFromName(strings[1]);
+                        if(vip != null) {
+                            if(VillagerClass.SpawnVillager(player.getLocation(), vip)) {
+                                player.sendMessage(vip.getVipName() + "&a&lショップを召喚しました。");
+                            } else {
+                                player.sendMessage("&c&lショップがすでに存在します。");
+                            }
+                            return false;
+                        } else {
+                            player.sendMessage(toColor("&c&lそのVIPは存在しません。"));
+                            return false;
+                        }
+                    }
+                    if(VillagerClass.SpawnVillager(player.getLocation(), null)) {
                         player.sendMessage("&a&lショップを召喚しました。");
                     } else {
                         player.sendMessage("&c&lショップがすでに存在します。");
@@ -48,7 +63,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 }
                 case "test" -> {
                     openListGUI(player, GUIManager.ListGUI.VIP_JOIN);
-                    //JoinVIP(vipData.get(Integer.parseInt(strings[1])), player);
                     return false;
                 }
                 case "mark" -> {
@@ -57,10 +71,21 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     return false;
                 }
                 case "movevillager" -> {
-                    VillagerData.getEntityData().teleport(player.getLocation());
-                    player.sendMessage(toColor("&a&l現在いる場所に村人を移動しました。"));
-                    Save();
-                    return false;
+                    if(strings.length == 1) {
+                        player.sendMessage(toColor("&c&l第二引数を指定する必要があります。"));
+                        return false;
+                    } else {
+                        for(var villagerData : VillagerData) {
+                            if(villagerData.getName().equalsIgnoreCase(strings[1])) {
+                                villagerData.getEntityData().teleport(player.getLocation());
+                                player.sendMessage(toColor("&a&l現在いる場所に村人を移動しました。"));
+                                Save();
+                                return false;
+                            }
+                        }
+                        player.sendMessage(toColor("&c&lその名前の村人は存在しません。"));
+                        return false;
+                    }
                 }
                 case "markmode" -> {
                     if(markingPlayer.containsKey(player) || vipMarkingPlayer.contains(player)) {

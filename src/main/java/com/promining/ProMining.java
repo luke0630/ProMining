@@ -46,8 +46,8 @@ public final class ProMining extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        if(Data.VillagerData != null && Data.VillagerData.getEntityData() != null) {
-            Data.VillagerData.getEntityData().remove();
+        for(var villager : Data.VillagerData) {
+            villager.getEntityData().remove();
         }
     }
 

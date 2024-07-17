@@ -2,6 +2,7 @@ package com.promining.System;
 
 import com.promining.Data.Data;
 import com.promining.Data.VIPData;
+import com.promining.Data.VillagerData;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -16,6 +17,7 @@ import java.util.UUID;
 import static com.promining.Data.Data.vipData;
 import static com.promining.ProMining.instance;
 import static com.promining.VillagerScript.VillagerClass.SpawnVillager;
+import static com.promining.VillagerScript.VillagerClass.SpawnVillagerLoad;
 
 public class SaveLoad {
     static Path yamlFile = Path.of(File.separator + "Data.yml");
@@ -65,12 +67,26 @@ public class SaveLoad {
             data.set(path, breakCounter.getValue());
         }
 
+        //****VILLAGER****//
+        var vipVillager = new ArrayList<VillagerData>();
+        var noVipVillager = new ArrayList<VillagerData>();
+        for(var villager : Data.VillagerData) {
+            if(villager.getVip() != null) {
+                vipVillager.add(villager);
+            } else {
+                noVipVillager.add(villager);
+            }
+        }
+        //****************//
+
+
         int count = 0;
         int blockCount = 0;
         for(var vip : vipData) {
             String path = DATA_PATH + "VipData." + count + ".";
             data.set(path + "name", vip.getVipName());
             data.set(path + "cost", vip.getNeedYen());
+            data.set(path + "icon", vip.getVipIcon().toString());
             data.set(path + "description", vip.getDescription());
 
             for(var countSet : vip.getCountData().entrySet()) {
@@ -82,6 +98,16 @@ public class SaveLoad {
             data.set(path + "selectorData.start", vip.getSelectorData().getStart());
             data.set(path + "selectorData.end", vip.getSelectorData().getEnd());
 
+            int villagerCounter = 0;
+            for(var villager : vipVillager) {
+                if(villager.getVip().equals(vip)) {
+                    var villagerPath = path + "villager." + villagerCounter + ".";
+                    data.set(villagerPath + "name", villager.getName());
+                    data.set(villagerPath + "loc", villager.getLocation());
+                    villagerCounter++;
+                }
+            }
+
             for(var block : vip.getBlockList()) {
                 data.set(path + "blockList." + blockCount + ".loc", block.getLocation());
                 data.set(path + "blockList." + blockCount + ".mat", block.getType().toString());
@@ -90,8 +116,12 @@ public class SaveLoad {
             count++;
         }
 
-        if(Data.VillagerData != null) {
-            data.set(DATA_PATH + "Villager", Data.VillagerData.getLocation());
+        int villagerCounter = 0;
+        for(var villager : noVipVillager) {
+            var villagerPath = DATA_PATH + "villager." + villagerCounter + ".";
+            data.set(villagerPath + "name", villager.getName());
+            data.set(villagerPath + "loc", villager.getLocation());
+            villagerCounter++;
         }
         SaveToFile();
     }
@@ -125,6 +155,9 @@ public class SaveLoad {
                 loadVipData.setNeedYen(data.getInt(resultPath + "cost"));
                 loadVipData.setDescription(data.getString(resultPath + "description"));
                 loadVipData.setPeriodPerMinute( data.getInt(resultPath + "period") );
+                if(data.contains(resultPath + "icon")) {
+                    loadVipData.setVipIcon( Material.valueOf(data.getString(resultPath + "icon")) );
+                }
 
 
                 var start = data.getLocation(resultPath + "selectorData.start");
@@ -160,8 +193,13 @@ public class SaveLoad {
         }
 
 
-        if(instance.configData.contains(DATA_PATH + "Villager")) {
-            SpawnVillager(instance.configData.getLocation(DATA_PATH + "Villager"));
+        if(instance.configData.contains(DATA_PATH + "villager")) {
+            for(var villagerCountPath : data.getConfigurationSection(DATA_PATH + "villager").getKeys(false)) {
+                var resultPath = DATA_PATH + "villager." + villagerCountPath + ".";
+                var name = data.getString(resultPath + "name");
+                var loc = data.getLocation(resultPath + "loc");
+                SpawnVillagerLoad(loc, null, name);
+            }
         }
     }
 }

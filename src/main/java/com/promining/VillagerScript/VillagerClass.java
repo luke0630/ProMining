@@ -1,6 +1,7 @@
 package com.promining.VillagerScript;
 
 
+import com.promining.Data.VIPData;
 import com.promining.Data.VillagerData;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -11,8 +12,7 @@ import static com.promining.ProMining.Save;
 import static com.promining.Useful.toColor;
 
 public class VillagerClass {
-    public static boolean SpawnVillager(Location location) {
-        if(VillagerData != null) return false;
+    public static boolean SpawnVillager(Location location, VIPData vip) {
         var pos = location;
         var entity = location.getWorld().spawnEntity(pos, EntityType.VILLAGER);
         LivingEntity lvEntity  = (LivingEntity) entity;
@@ -24,12 +24,12 @@ public class VillagerClass {
         ((LivingEntity) entity).setAI(true);
         ((LivingEntity) entity).setCollidable(false);
 
-        VillagerData = new VillagerData(location, entity.getUniqueId(), "&c&lVIPショップ", entity); //村人リストに追加する
+        VillagerData.add(new VillagerData(location, entity.getUniqueId(), "&c&lVIPショップ", entity, vip)); //村人リストに追加する
         Save();
         return true;
     }
 
-    public static void SpawnVillagerByScript(Location location,String name) {
+    public static boolean SpawnVillagerLoad(Location location, VIPData vip, String name) {
         var pos = location;
         var entity = location.getWorld().spawnEntity(pos, EntityType.VILLAGER);
         LivingEntity lvEntity  = (LivingEntity) entity;
@@ -40,6 +40,9 @@ public class VillagerClass {
         entity.setCustomNameVisible(true);
         ((LivingEntity) entity).setAI(true);
         ((LivingEntity) entity).setCollidable(false);
-        VillagerData = new VillagerData(location, entity.getUniqueId(), name, entity); //村人リストに追加する
+
+        VillagerData.add(new VillagerData(location, entity.getUniqueId(), name, entity, vip)); //村人リストに追加する
+        Save();
+        return true;
     }
 }

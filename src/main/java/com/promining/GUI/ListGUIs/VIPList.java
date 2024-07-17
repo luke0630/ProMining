@@ -34,7 +34,7 @@ public class VIPList extends ListGUIAbstract {
     public List<ItemStack> itemList() {
         List<ItemStack> itemList = new ArrayList<>();
         for(var vipData : Data.vipData) {
-            var item = getItem(Material.GOLD_BLOCK, vipData.getVipName());
+            var item = getItem(vipData.getVipIcon(), vipData.getVipName());
             int blockCount = vipData.getBlockList().size();
             setLore(item, List.of(
                     "&aブロック数: " + blockCount + "個",

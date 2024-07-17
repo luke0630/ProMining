@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.promining.GUI.GUIManager.openGUI;
+import static com.promining.ProMining.Save;
 import static com.promining.Useful.setLore;
 
 public class MaterialList extends ListGUIAbstract {
@@ -56,6 +57,7 @@ public class MaterialList extends ListGUIAbstract {
 
                 Material mate = event.getCurrentItem().getType();
                 currentVip.setVipIcon(mate);
+                Save();
                 openGUI(player, GUIManager.GUI.EDITOR_VIP);
             }
         };

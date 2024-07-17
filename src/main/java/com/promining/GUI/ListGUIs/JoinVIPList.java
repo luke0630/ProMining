@@ -37,7 +37,7 @@ public class JoinVIPList extends ListGUIAbstract {
     public List<ItemStack> itemList() {
         var itemList = new ArrayList<ItemStack>();
         for(var vip : vipData) {
-            var item = getItem(Material.GOLD_BLOCK, "&6" + vip.getVipName());
+            var item = getItem(vip.getVipIcon(), "&6" + vip.getVipName());
             var isJoining = vip.getCountData().containsKey(player.getUniqueId());
             String isJoiningString = "&8現在、加入していません。";
             if(isJoining) {

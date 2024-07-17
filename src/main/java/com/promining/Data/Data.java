@@ -21,7 +21,7 @@ public class Data {
 
         public static Map<Player, RunnableSystem.Runnable> clickedMiningBlock = new HashMap<>();
 
-        public static VillagerData VillagerData = null;
+        public static List<VillagerData> VillagerData = new ArrayList<>();
 
 
     public static class CountData {
@@ -53,7 +53,7 @@ public class Data {
 
 
     public static List<VIPData> vipData = new ArrayList<>();
-    public static Map<UUID, Long> breakCounterPlayer = new TreeMap<>(Collections.reverseOrder());;
+    public static Map<UUID, Long> breakCounterPlayer = new TreeMap<>(Collections.reverseOrder());
     public static Map<Player, Boolean> markingPlayer = new HashMap<>();
     public static List<Player> vipMarkingPlayer = new ArrayList<>();
     public static List<Block> markedBlockList = new ArrayList<>();

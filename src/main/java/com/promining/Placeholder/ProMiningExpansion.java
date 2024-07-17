@@ -7,7 +7,12 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static com.promining.Data.Data.breakCounterPlayer;
 
 public class ProMiningExpansion extends PlaceholderExpansion {
     @Override
@@ -35,7 +40,7 @@ public class ProMiningExpansion extends PlaceholderExpansion {
             return "";
         }
         if(params.equalsIgnoreCase("player")) {
-            var you = Data.breakCounterPlayer.get(offlinePlayer.getUniqueId());
+            var you = breakCounterPlayer.get(offlinePlayer.getUniqueId());
             if(you != null) {
                 return you + "回";
             } else {
@@ -61,7 +66,9 @@ public class ProMiningExpansion extends PlaceholderExpansion {
     }
 
     public RankSet getRankSet(int targetRank) {
-        var list = Data.breakCounterPlayer.entrySet();
+        var map = breakCounterPlayer.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect(Collectors.toMap(Map.Entry::getKey,
+                Map.Entry::getValue, (k1, k2) -> k1, LinkedHashMap::new));
+        var list = map.entrySet();
 
         int ranking = 1;
         for(var data : list) {
