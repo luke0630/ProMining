@@ -7,12 +7,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static com.promining.Data.Data.vipData;
 import static com.promining.Function.VIPFunction.IsInVIP;
 import static com.promining.Function.VIPFunction.StartCount;
 import static com.promining.Useful.toColor;
@@ -26,7 +23,10 @@ public class SelectorListening implements Listener {
             if(IsInVIP(player.getLocation(), vip)) {
                 if(!inVIPList.containsKey(player) || inVIPList.get(player) != vip) {
                     inVIPList.put(player, vip);
-                    player.sendMessage(toColor("&a&l" + vip.getVipName() + "のエリアに入りました。"));
+                    player.sendMessage(toColor("&a" + vip.getVipName() + "のエリアに入りました。"));
+                    if(vip.getCountData().containsKey(player.getUniqueId())) {
+                        player.sendMessage(toColor("&c※エリアから出れば中断可能です。また入れば続きからカウントが始まります。"));
+                    }
                 }
                 StartCount(player, vip);
             } else {
@@ -38,7 +38,7 @@ public class SelectorListening implements Listener {
                 content.setTask(null);
                 if(inVIPList.containsKey(player)) {
                     inVIPList.remove(player);
-                    player.sendMessage(toColor("&c&l" + vip.getVipName() + "のエリアから出ました。"));
+                    player.sendMessage(toColor("&c" + vip.getVipName() + "のエリアから出ました。"));
                 }
             }
         }

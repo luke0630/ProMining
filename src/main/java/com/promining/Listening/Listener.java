@@ -1,6 +1,7 @@
 package com.promining.Listening;
 import com.promining.Data.VIPData;
 import com.promining.Function.BreakBlockFunction;
+import com.promining.Useful;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -31,6 +32,13 @@ public class Listener implements org.bukkit.event.Listener {
         var player = event.getPlayer();
         if(event.getClickedBlock() == null) return;
         if(event.getClickedBlock().isEmpty()) return;
+        if(!player.hasPermission("promining.miningotherblock")) {
+            if(isMarkedBlock(event.getClickedBlock().getLocation()) || isVIPMarkedBlock(event.getClickedBlock().getLocation()) != null) {
+                if(event.getAction().isRightClick()) {
+                    event.setCancelled(true);
+                }
+            }
+        }
         if(event.getClickedBlock().getType() == Material.AIR) return;
         if(isWand(player.getItemInHand())) {
             if(!playerSelectorData.containsKey(player)) {

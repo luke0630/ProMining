@@ -16,7 +16,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.Objects;
+import java.util.*;
 
 public final class ProMining extends JavaPlugin {
     public static ProMining instance;
@@ -40,6 +40,15 @@ public final class ProMining extends JavaPlugin {
 
         new ProMiningExpansion().register(); //
         new SaveLoad().MakeFile();
+
+        Map<String, Long> breakCounterPlayer = new TreeMap<>(Collections.reverseOrder());
+
+        breakCounterPlayer.put("test", 100L);
+        breakCounterPlayer.put("uee", 32L);
+        breakCounterPlayer.put("ueeda", 55L);
+        for(var data : breakCounterPlayer.values()) {
+            getServer().getLogger().info(": " + data);
+        }
     }
 
 
