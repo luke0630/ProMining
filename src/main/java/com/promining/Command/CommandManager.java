@@ -88,9 +88,10 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     }
                 }
                 case "markmode" -> {
-                    if(markingPlayer.containsKey(player) || vipMarkingPlayer.contains(player)) {
+                    if(markingPlayer.containsKey(player) || vipMarkingPlayer.contains(player) || clickedMiningBlock.containsKey(player)) {
                         markingPlayer.remove(player);
                         vipMarkingPlayer.remove(player);
+                        clickedMiningBlock.remove(player);
                         player.sendMessage(toColor("&cマークモードから抜けました。"));
                         return false;
                     }
@@ -123,7 +124,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 return onTidyList(List.of("mark", "markmode", "wand", "movevillager", "spawn"), strings[0]);
             }
             case 2 -> {
-                if(strings[0].equalsIgnoreCase("markmode")) {
+                if(strings[0].equalsIgnoreCase("markmode") || strings[0].equalsIgnoreCase("spawn")) {
                     var vipNameList = new ArrayList<String>();
                     for(var vip : vipData) {
                         vipNameList.add(vip.getVipName());

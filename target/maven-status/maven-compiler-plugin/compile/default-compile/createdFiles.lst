@@ -1,4 +1,5 @@
 com\promining\Data\VillagerData.class
+com\promining\GUI\NormalGUIs\GUI_VillagerEditor.class
 com\promining\ProMining.class
 com\promining\GUI\NormalGUIs\GUI_VipConfirm.class
 com\promining\Function\VIPFunction.class
@@ -21,6 +22,7 @@ com\promining\Function\BreakBlockFunction.class
 com\promining\GUI\GUIManager.class
 com\promining\GUI\ListGUIs\MaterialList.class
 com\promining\GUI\GUIListData.class
+com\promining\GUI\ListGUIs\NotListJoinVIP.class
 com\promining\Listening\SelectorListening.class
 com\promining\GUI\GUIManager$GUI.class
 com\promining\Function\ListFunction.class
@@ -36,6 +38,7 @@ com\promining\VillagerScript\VillagerClass.class
 com\promining\GUI\ListGUIs\JoinVIPList.class
 com\promining\Placeholder\ProMiningExpansion.class
 com\promining\Data\Data.class
+com\promining\Function\VillagerFunction.class
 com\promining\Data\Data$CountData.class
 com\promining\GUI\ListGUIs\VIPList.class
 com\promining\GUI\NormalGUIs\GUI_VIPEditor.class

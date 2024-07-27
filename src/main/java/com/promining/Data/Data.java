@@ -16,6 +16,7 @@ public class Data {
         public static Map<Player, GUIListData> playerOpenListGUIData = new HashMap<>();
         public static Map<Player, GUIManager.GUI> playerOpenGUI = new HashMap<>();
         public static Map<Player, VIPData> playerOpenVipData = new HashMap<>();
+        public static Map<Player, VillagerData> playerOpenVillagerEditor = new HashMap<>();
 
 
 

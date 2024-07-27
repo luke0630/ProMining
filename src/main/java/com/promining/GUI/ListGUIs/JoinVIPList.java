@@ -1,6 +1,7 @@
 package com.promining.GUI.ListGUIs;
 
 import com.promining.Data.VIPData;
+import com.promining.Function.VIPFunction;
 import com.promining.GUI.GUIManager;
 import com.promining.GUI.ListGUIAbstract;
 import com.promining.System.RunnableSystem;
@@ -37,27 +38,7 @@ public class JoinVIPList extends ListGUIAbstract {
     public List<ItemStack> itemList() {
         var itemList = new ArrayList<ItemStack>();
         for(var vip : vipData) {
-            var item = getItem(vip.getVipIcon(), "&6" + vip.getVipName());
-            var isJoining = vip.getCountData().containsKey(player.getUniqueId());
-            String isJoiningString = "&8現在、加入していません。";
-            if(isJoining) {
-                isJoiningString = "&a&l加入しています。";
-            }
-            setLore(item, List.of(
-                    isJoiningString,
-                    "&f&l-------------------------------------",
-                    "&cVIP期限: " + Useful.getTidyTime( Useful.getHourFromMinute(vip.getPeriodPerMinute()) ),
-                    "&a加入金: " + vip.getNeedYen() + "円",
-                    "&c説明: " + vip.getDescription(),
-                    "&f&l-------------------------------------",
-                    "&cクリックして掘られるブロック一覧&加入画面へ移動",
-                    "&f&l-------------------------------------",
-                    "&6VIP期限とは: このVIPでいられる期間のことで、",
-                    "&6&l期間が過ぎると&c&lVIPのブロックは手に入れられなくなります。",
-                    "&6もう一度加入すればまた掘られるようになります。",
-                    "&6&l期限は対象のVIPエリアにいる間は期限が迫っていきます。"
-            ));
-            itemList.add(item);
+            itemList.add(VIPFunction.getVIPInfoItemStack(player, vip));
         }
         return itemList;
     }

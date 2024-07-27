@@ -19,6 +19,7 @@ public class GUIManager {
         EDITOR_VIP_CHANGE_PERIOD,
         JOIN_VIP_CONFIRM,
         EDITOR_VILLAGER,
+        VIP_JOIN_NOT_LIST,
     }
     public enum ListGUI {
         BLOCK_LIST,
@@ -42,6 +43,8 @@ public class GUIManager {
             new GUI_VIPEditor(),
             new GUI_VIPEditor_ChangePeriod(),
             new GUI_VipConfirm(),
+            new NotListJoinVIP(),
+            new GUI_VillagerEditor(),
     };
     static GUIListData getListGUI(Player player, ListGUI gui) {
         for(var guiData : ListGUIs) {

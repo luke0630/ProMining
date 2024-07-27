@@ -95,8 +95,10 @@ public class SaveLoad {
 
             data.set(path + "period", vip.getPeriodPerMinute());
 
-            data.set(path + "selectorData.start", vip.getSelectorData().getStart());
-            data.set(path + "selectorData.end", vip.getSelectorData().getEnd());
+            if(vip.getSelectorData() != null && vip.getSelectorData().getStart() != null && vip.getSelectorData().getEnd() != null) {
+                data.set(path + "selectorData.start", vip.getSelectorData().getStart());
+                data.set(path + "selectorData.end", vip.getSelectorData().getEnd());
+            }
 
             int villagerCounter = 0;
             for(var villager : vipVillager) {
@@ -164,13 +166,6 @@ public class SaveLoad {
                 var end = data.getLocation(resultPath + "selectorData.end");
                 loadVipData.setSelectorData( new Data.SelectorData(start, end) );
 
-                if(data.contains(resultPath + "villager")) {
-                    for(var vipVillagerPath : data.getConfigurationSection(resultPath + "villager").getKeys(false)) {
-                        var resultVillagerPath = resultPath + "villager." + vipVillagerPath + ".";
-                        //TODO: nameとloc
-                    }
-                }
-
                 if(data.contains(resultPath + "countData")) {
                     var countMap = new HashMap<UUID, Data.CountData>();
                     for(var uuid : data.getConfigurationSection(resultPath + "countData").getKeys(false)) {
@@ -196,6 +191,18 @@ public class SaveLoad {
                 }
 
                 vipData.add(loadVipData);
+
+
+                if(data.contains(resultPath + "villager")) {
+                    for(var vipVillagerPath : data.getConfigurationSection(resultPath + "villager").getKeys(false)) {
+                        var resultVillagerPath = resultPath + "villager." + vipVillagerPath + ".";
+                        var name = data.getString(resultVillagerPath + "name");
+                        var loc = data.getLocation(resultVillagerPath + "loc");
+                        if(loc != null) {
+                            SpawnVillagerLoad(loc, loadVipData, name);
+                        }
+                    }
+                }
             }
         }
 
@@ -205,7 +212,9 @@ public class SaveLoad {
                 var resultPath = DATA_PATH + "villager." + villagerCountPath + ".";
                 var name = data.getString(resultPath + "name");
                 var loc = data.getLocation(resultPath + "loc");
-                SpawnVillagerLoad(loc, null, name);
+                if(loc != null) {
+                    SpawnVillagerLoad(loc, null, name);
+                }
             }
         }
     }

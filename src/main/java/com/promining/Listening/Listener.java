@@ -1,9 +1,6 @@
 package com.promining.Listening;
-import com.promining.Data.Data;
 import com.promining.Data.VIPData;
 import com.promining.Function.BreakBlockFunction;
-import io.papermc.paper.event.player.AsyncChatEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,7 +13,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
@@ -106,13 +102,12 @@ public class Listener implements org.bukkit.event.Listener {
                 for(var blockData : vip.getBlockList()) {
                     if(blockData.getType().equals(clickedBlock.getType())) {
                         player.sendMessage(toColor("&cそのブロックタイプはすでに&6" + vip.getVipName() + "&cで登録されています！"));
+                        markingPlayer.remove(player);
                         event.setCancelled(true);
                         return;
                     }
                 }
             }
-
-
             markedBlockList.add(clickedBlock);
 
             if(markingPlayer.get(player)) {

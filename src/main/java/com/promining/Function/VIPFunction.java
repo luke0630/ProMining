@@ -4,10 +4,14 @@ import com.promining.Data.Data;
 import com.promining.Data.VIPData;
 import com.promining.GUI.GUIManager;
 import com.promining.ProMining;
+import com.promining.Useful;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 import static com.promining.Data.Data.*;
 import static com.promining.GUI.GUIManager.openGUI;
@@ -143,7 +147,7 @@ public class VIPFunction {
     }
 
     public static boolean IsInVIP(Location location, VIPData vip) {
-        if(vip.getSelectorData() == null) {
+        if(vip.getSelectorData() == null || vip.getSelectorData().getStart() == null || vip.getSelectorData().getEnd() == null) {
             return false;
         }
         var start = vip.getSelectorData().getStart();
@@ -164,6 +168,30 @@ public class VIPFunction {
             return true;
         }
         return false;
+    }
+
+    public static ItemStack getVIPInfoItemStack(Player player, VIPData vip) {
+        var item = getItem(vip.getVipIcon(), "&6" + vip.getVipName());
+        var isJoining = vip.getCountData().containsKey(player.getUniqueId());
+        String isJoiningString = "&8現在、加入していません。";
+        if(isJoining) {
+            isJoiningString = "&a&l加入しています。";
+        }
+        setLore(item, List.of(
+                isJoiningString,
+                "&f&l-------------------------------------",
+                "&cVIP期限: " + Useful.getTidyTime( Useful.getHourFromMinute(vip.getPeriodPerMinute()) ),
+                "&a加入金: " + vip.getNeedYen() + "円",
+                "&c説明: " + vip.getDescription(),
+                "&f&l-------------------------------------",
+                "&cクリックして掘られるブロック一覧&加入画面へ移動",
+                "&f&l-------------------------------------",
+                "&6VIP期限とは: このVIPでいられる期間のことで、",
+                "&6&l期間が過ぎると&c&lVIPのブロックは手に入れられなくなります。",
+                "&6もう一度加入すればまた掘られるようになります。",
+                "&6&l期限は対象のVIPエリアにいる間は期限が迫っていきます。"
+        ));
+        return item;
     }
 
 
